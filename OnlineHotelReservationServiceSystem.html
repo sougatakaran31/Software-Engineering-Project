@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XYZ HOTEL</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background: #f9f9f9; color: #333; }
+    header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: #fff; padding: 40px 20px; text-align: center; }
+    header h1 { font-size: 2.5em; margin: 0; }
+    header p { font-size: 1.2em; margin-top: 8px; }
+    nav { background: #2c3e50; padding: 12px; text-align: center; position: sticky; top: 0; z-index: 1000; }
+    nav a { color: #fff; margin: 0 20px; text-decoration: none; font-weight: 500; }
+    nav a:hover { color: #f1c40f; }
+    .container { padding: 40px 20px; max-width: 1100px; margin: auto; }
+    h2 { color: #2c3e50; margin-bottom: 20px; }
+    .room { background: #fff; padding: 20px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s; }
+    .room:hover { transform: translateY(-5px); }
+    .room h3 { margin-top: 0; color: #34495e; }
+    .btn { display: inline-block; background: #27ae60; color: #fff; padding: 12px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; transition: background 0.3s; }
+    .btn:hover { background: #219150; }
+    form { background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    form label { font-weight: 600; display: block; margin: 10px 0 5px; }
+    form input, form select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #ccc; }
+    #confirmation { margin-top: 15px; font-weight: bold; color: #27ae60; }
+    footer { background: #2c3e50; color: #fff; text-align: center; padding: 20px; margin-top: 40px; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>XYZ HOTEL</h1>
+    <p>Welcome to XYZ HOTEL – Jhargram, Westbengal</p>
+  </header>
+  
+  <nav>
+    <a href="#rooms">Rooms</a>
+    <a href="#booking">Book Now</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <div class="container" id="rooms">
+    <h2>Our Rooms</h2>
+    <div class="room">
+      <h3>Deluxe Room</h3>
+      <p>Price: ₹3000 per night</p>
+      <a href="#booking" class="btn">Book Now</a>
+    </div>
+    <div class="room">
+      <h3>Super Deluxe Room</h3>
+      <p>Price: ₹5000 per night</p>
+      <a href="#booking" class="btn">Book Now</a>
+    </div>
+    <div class="room">
+      <h3>Suite</h3>
+      <p>Price: ₹8000 per night</p>
+      <a href="#booking" class="btn">Book Now</a>
+    </div>
+  </div>
+
+  <div class="container" id="booking">
+    <h2>Book Your Stay</h2>
+    <form id="bookingForm">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" required>
+
+      <label for="room">Select Room:</label>
+      <select id="room" required>
+        <option value="Deluxe">Deluxe Room - ₹3000</option>
+        <option value="Super Deluxe">Super Deluxe Room - ₹5000</option>
+        <option value="Suite">Suite - ₹8000</option>
+      </select>
+
+      <label for="checkin">Check-in Date:</label>
+      <input type="date" id="checkin" required>
+
+      <label for="checkout">Check-out Date:</label>
+      <input type="date" id="checkout" required>
+
+      <label for="guests">Number of Guests:</label>
+      <input type="number" id="guests" min="1" max="10" required>
+
+      <button type="submit" class="btn">Confirm Booking</button>
+    </form>
+    <p id="confirmation"></p>
+  </div>
+
+  <div class="container" id="contact">
+    <h2>Contact Us</h2>
+    <p>XYZ HOTEL<br>Jhargram, Westbengal<br>Email: info@xyzhotel.com<br>Phone: +91 9876543210</p>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 XYZ HOTEL | Jhargram, Westbengal</p>
+  </footer>
+
+  <script>
+    document.getElementById("bookingForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let name = document.getElementById("name").value;
+      let room = document.getElementById("room").value;
+      let checkin = document.getElementById("checkin").value;
+      let checkout = document.getElementById("checkout").value;
+      document.getElementById("confirmation").innerText = `Thank you, ${name}! Your ${room} is booked from ${checkin} to ${checkout}.`;
+    });
+  </script>
+</body>
+</html>
