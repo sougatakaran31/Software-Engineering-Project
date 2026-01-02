@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Organized Retail Shopping Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #dbeafe;
+      --bg: #0f172a;
+      --bg-alt: #020617;
+      --card-bg: #020617;
+      --border: #1e293b;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --accent: #f97316;
+      --radius: 8px;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      background: radial-gradient(circle at top left, #1d283a 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Layout */
+    .sidebar {
+      width: 260px;
+      background: rgba(15, 23, 42, 0.96);
+      border-right: 1px solid var(--border);
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 20%, #38bdf8, #2563eb 40%, #4f46e5 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: #e5e7eb;
+    }
+    .brand-info h1 {
+      font-size: 18px;
+    }
+    .brand-info span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 12px 2px 6px;
+    }
+    .nav-list {
+      list-style: none;
+    }
+    .nav-item {
+      margin-bottom: 4px;
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: 0.15s ease;
+    }
+    .nav-link span.icon {
+      width: 18px;
+      text-align: center;
+      font-size: 13px;
+    }
+    .nav-link.active,
+    .nav-link:hover {
+      background: rgba(37, 99, 235, 0.12);
+      border-color: rgba(37, 99, 235, 0.45);
+      color: #e5e7eb;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 11px;
+      color: var(--muted);
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 14px 18px;
+      gap: 12px;
+    }
+
+    /* Topbar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .topbar-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .page-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .pill {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--muted);
+    }
+    .search {
+      margin-left: 12px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      gap: 6px;
+    }
+    .search input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 13px;
+    }
+    .search span {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--muted);
+    }
+    .avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #38bdf8, #22c55e);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* View containers */
+    .view {
+      display: none;
+    }
+    .view.active {
+      display: block;
+    }
+
+    /* Main grid for POS view */
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.4fr);
+      gap: 12px;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.94);
+      border-radius: var(--radius);
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
+      padding: 12px 12px 10px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .card-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--muted);
+    }
+
+    /* Small stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .stat {
+      background: radial-gradient(circle at top left, #0f172a, #020617 60%);
+      border-radius: 10px;
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      padding: 8px 10px;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stat-label {
+      color: var(--muted);
+    }
+    .stat-value {
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .stat-pill {
+      align-self: flex-start;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      color: #22c55e;
+      background: rgba(22, 163, 74, 0.14);
+    }
+
+    /* Filters row */
+    .filters {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .chip {
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .chip.active {
+      background: rgba(37, 99, 235, 0.23);
+      border-color: rgba(37, 99, 235, 0.85);
+      color: #e5e7eb;
+    }
+
+    /* Product list */
+    .product-list {
+      max-height: 350px;
+      overflow: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, #020617, #020617 65%, #020617 100%);
+    }
+    .product-row {
+      display: grid;
+      grid-template-columns: 1.5fr 0.8fr 0.6fr 0.7fr 0.7fr;
+      gap: 4px;
+      padding: 7px 10px;
+      align-items: center;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+    }
+    .product-row.header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: radial-gradient(circle at top left, #020617, #020617 70%, #020617 100%);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .product-row:nth-child(even):not(.header) {
+      background: rgba(15, 23, 42, 0.7);
+    }
+    .product-row:hover:not(.header) {
+      background: rgba(15, 23, 42, 0.95);
+    }
+    .product-name {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .product-name span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .badge-cat {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px solid rgba(37, 99, 235, 0.5);
+      color: #bfdbfe;
+      align-self: flex-start;
+    }
+    .pill-stock {
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      color: var(--muted);
+      text-align: center;
+    }
+    .pill-stock.low {
+      border-color: rgba(239, 68, 68, 0.6);
+      color: #fecaca;
+      background: rgba(127, 29, 29, 0.45);
+    }
+    .price {
+      font-weight: 600;
+      font-size: 12px;
+    }
+    .btn {
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 11px;
+      border: none;
+      cursor: pointer;
+      transition: 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: #e5e7eb;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.5);
+    }
+    .btn-primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-0.5px);
+    }
+    .btn-xs {
+      padding: 2px 7px;
+      font-size: 10px;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+    }
+
+    /* Cart / billing */
+    .cart-summary {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .summary-row strong {
+      font-size: 13px;
+      color: var(--text);
+    }
+    .summary-row .amount {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .summary-row .amount.total {
+      font-size: 18px;
+      color: #f9fafb;
+    }
+
+    .cart-list {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      max-height: 235px;
+      overflow: auto;
+      margin-top: 4px;
+    }
+    .cart-row {
+      display: grid;
+      grid-template-columns: 1.6fr 0.7fr 0.8fr 0.7fr;
+      gap: 4px;
+      align-items: center;
+      padding: 6px 8px;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+    }
+    .cart-row.header {
+      position: sticky;
+      top: 0;
+      background: radial-gradient(circle at top left, #020617, #020617 70%);
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .qty-control {
+      display: inline-flex;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      overflow: hidden;
+    }
+    .qty-control button {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      width: 20px;
+      cursor: pointer;
+    }
+    .qty-control span {
+      padding: 0 6px;
+      font-size: 12px;
+      min-width: 16px;
+      text-align: center;
+    }
+
+    .cart-footer {
+      display: flex;
+      flex-direction: column;
+      margin-top: 8px;
+      gap: 6px;
+    }
+    .cart-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .cart-actions .btn {
+      flex: 1;
+    }
+    .meta-row {
+      display: flex;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .meta-row div {
+      flex: 1;
+    }
+    .meta-row span {
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    /* Simple tables for categories / stock alerts */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      border-bottom: 1px solid rgba(15,23,42,0.9);
+      padding: 6px 4px;
+      text-align: left;
+    }
+    th {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 8px;
+      }
+      .main {
+        padding: 10px;
+      }
+      .content-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    @media (max-width: 600px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .search {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-logo">R</div>
+        <div class="brand-info">
+          <h1>RetailSphere</h1>
+          <span>Organized Retail Suite</span>
+        </div>
+      </div>
+
+      <div class="nav-section-title">Operations</div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <div class="nav-link active" data-view="view-pos">
+            <span class="icon">📊</span>
+            <span>Dashboard</span>
+          </div>
+        </li>
+        <li class="nav-item">
+          <div class="nav-link" data-view="view-products">
+            <span class="icon">📦</span>
+            <span>Products</span>
+          </div>
+        </li>
+        <li class="nav-item">
+          <div class="nav-link" data-view="view-pos">
+            <span class="icon">🧾</span>
+            <span>Billing / POS</span>
+          </div>
+        </li>
+        <li class="nav-item">
+          <div class="nav-link" data-view="view-categories">
+            <span class="icon">📁</span>
+            <span>Categories</span>
+          </div>
+        </li>
+      </ul>
+
+      <div class="nav-section-title">Insights</div>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <div class="nav-link" data-view="view-stock">
+            <span class="icon">📦</span>
+            <span>Stock Alerts</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <div>Today: <span id="todayDate"></span></div>
+      <div>Shift: Morning • Cashier: <strong>POS01</strong></div>
+    </div>
+  </aside>
+
+  <!-- Main area -->
+  <main class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="topbar-main">
+        <div>
+          <div class="page-title" id="pageTitle">Billing & Inventory Console</div>
+          <div class="card-subtitle">
+            Manage walk‑in orders, cart, and live stock in a single view.
+          </div>
+        </div>
+        <span class="pill">Session: POS‑A / Counter‑1</span>
+        <div class="search">
+          <span>🔍</span>
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Search SKU or product name..."
+          />
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="badge" id="ordersBadge">Bills today: 0</span>
+        <span class="badge">Mode: Retail</span>
+        <div class="avatar">OP</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-label">Today Revenue</div>
+        <div class="stat-value" id="statRevenue">₹0</div>
+        <div class="stat-pill">Target: 35,000</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Items in Cart</div>
+        <div class="stat-value" id="statCartQty">0</div>
+        <div class="stat-pill">Lines: <span id="statCartLines">0</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Low Stock SKUs</div>
+        <div class="stat-value" id="statLowStock">0</div>
+        <div class="stat-pill">Alert at &lt; 5</div>
+      </div>
+    </div>
+
+    <!-- VIEW 1: POS (Products + Cart) -->
+    <section id="view-pos" class="view active">
+      <section class="content-grid">
+        <!-- Left: Products -->
+        <section class="card">
+          <header class="card-header">
+            <div>
+              <div class="card-title">Products & Inventory</div>
+              <div class="card-subtitle">
+                Click “Add to Cart” to start billing. Use filters for quick search.
+              </div>
+            </div>
+            <span class="tag" id="productCountTag">0 SKUs</span>
+          </header>
+
+          <!-- Filters -->
+          <div class="filters">
+            <span>Filter:</span>
+            <span class="chip active" data-filter="all">All</span>
+            <span class="chip" data-filter="Grocery">Grocery</span>
+            <span class="chip" data-filter="Beverages">Beverages</span>
+            <span class="chip" data-filter="Personal Care">Personal Care</span>
+            <span class="chip" data-filter="Dairy">Dairy</span>
+          </div>
+
+          <!-- Product list -->
+          <div class="product-list" id="productList">
+            <div class="product-row header">
+              <div>Product</div>
+              <div>Category</div>
+              <div>Stock</div>
+              <div>MRP</div>
+              <div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Cart / Billing -->
+        <section class="card">
+          <header class="card-header">
+            <div>
+              <div class="card-title">Cart & Billing</div>
+              <div class="card-subtitle">
+                Adjust quantities, apply discount and complete checkout.
+              </div>
+            </div>
+            <span class="tag">Bill No: <span id="billNumber">POS‑0001</span></span>
+          </header>
+
+          <div class="cart-summary">
+            <div class="summary-row">
+              <span>Customer</span>
+              <strong id="customerName">Walk‑in</strong>
+            </div>
+
+            <div class="cart-list" id="cartList">
+              <div class="cart-row header">
+                <div>Item</div>
+                <div>Qty</div>
+                <div>Price</div>
+                <div>Line</div>
+              </div>
+            </div>
+
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span class="amount" id="subTotal">₹0.00</span>
+            </div>
+            <div class="summary-row">
+              <span>GST (18%)</span>
+              <span class="amount" id="taxAmount">₹0.00</span>
+            </div>
+            <div class="summary-row">
+              <span>Manual Discount</span>
+              <span>
+                <input
+                  id="discountInput"
+                  type="number"
+                  min="0"
+                  value="0"
+                  style="width: 70px; background: transparent; border: 1px solid #4b5563; border-radius: 999px; padding: 3px 6px; color: #e5e7eb; font-size: 11px;"
+                /> ₹
+              </span>
+            </div>
+            <div class="summary-row">
+              <strong>Net Payable</strong>
+              <span class="amount total" id="netTotal">₹0.00</span>
+            </div>
+
+            <div class="cart-footer">
+              <div class="cart-actions">
+                <button class="btn btn-ghost" id="btnClearCart">Clear</button>
+                <button class="btn btn-primary" id="btnCheckout">
+                  Complete Bill
+                </button>
+              </div>
+              <div class="meta-row">
+                <div>Payment: <span id="paymentMode">Cash</span></div>
+                <div>Items: <span id="metaItems">0</span></div>
+                <div>Last bill: <span id="lastBillValue">₹0</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </section>
+
+    <!-- VIEW 2: Products-only master -->
+    <section id="view-products" class="view">
+      <section class="card">
+        <header class="card-header">
+          <div>
+            <div class="card-title">Product Master</div>
+            <div class="card-subtitle">
+              Quick view of all SKUs currently configured.
+            </div>
+          </div>
+        </header>
+        <table id="productTable">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>MRP</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </section>
+
+    <!-- VIEW 3: Categories -->
+    <section id="view-categories" class="view">
+      <section class="card">
+        <header class="card-header">
+          <div>
+            <div class="card-title">Categories</div>
+            <div class="card-subtitle">
+              Logical grouping for SKUs; counts are from sample data.
+            </div>
+          </div>
+        </header>
+        <table id="categoryTable">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>SKU Count</th>
+              <th>Total Stock</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </section>
+
+    <!-- VIEW 4: Stock Alerts -->
+    <section id="view-stock" class="view">
+      <section class="card">
+        <header class="card-header">
+          <div>
+            <div class="card-title">Stock Alerts</div>
+            <div class="card-subtitle">
+              Items below threshold (stock &lt; 5) and need replenishment.
+            </div>
+          </div>
+        </header>
+        <table id="stockTable">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    // --- Sample Product Data ---
+    const products = [
+      { id: "SKU-1001", name: "Basmati Rice 5kg", category: "Grocery", price: 560, stock: 14, unit: "bag" },
+      { id: "SKU-1002", name: "Fortified Atta 10kg", category: "Grocery", price: 480, stock: 8, unit: "bag" },
+      { id: "SKU-1003", name: "Sunflower Oil 1L", category: "Grocery", price: 165, stock: 4, unit: "bottle" },
+      { id: "SKU-1101", name: "Cold Drink Cola 2L", category: "Beverages", price: 95, stock: 22, unit: "bottle" },
+      { id: "SKU-1102", name: "Orange Juice 1L", category: "Beverages", price: 120, stock: 6, unit: "tetra" },
+      { id: "SKU-1201", name: "Milk Toned 1L", category: "Dairy", price: 64, stock: 10, unit: "pack" },
+      { id: "SKU-1202", name: "Yogurt Cup 100g", category: "Dairy", price: 20, stock: 30, unit: "cup" },
+      { id: "SKU-1301", name: "Bath Soap 125g", category: "Personal Care", price: 35, stock: 18, unit: "bar" },
+      { id: "SKU-1302", name: "Shampoo 180ml", category: "Personal Care", price: 165, stock: 5, unit: "bottle" },
+      { id: "SKU-1303", name: "Toothpaste 150g", category: "Personal Care", price: 90, stock: 3, unit: "tube" }
+    ];
+
+    let cart = [];
+    let billCounter = 1;
+    let todayRevenue = 0;
+    let lastBill = 0;
+
+    // DOM refs
+    const productListEl = document.getElementById("productList");
+    const productCountTag = document.getElementById("productCountTag");
+    const statLowStock = document.getElementById("statLowStock");
+    const searchInput = document.getElementById("searchInput");
+    const filterChips = document.querySelectorAll(".chip[data-filter]");
+    const cartListEl = document.getElementById("cartList");
+    const subTotalEl = document.getElementById("subTotal");
+    const taxAmountEl = document.getElementById("taxAmount");
+    const netTotalEl = document.getElementById("netTotal");
+    const discountInput = document.getElementById("discountInput");
+    const statCartQty = document.getElementById("statCartQty");
+    const statCartLines = document.getElementById("statCartLines");
+    const billNumberEl = document.getElementById("billNumber");
+    const btnClearCart = document.getElementById("btnClearCart");
+    const btnCheckout = document.getElementById("btnCheckout");
+    const metaItems = document.getElementById("metaItems");
+    const lastBillValue = document.getElementById("lastBillValue");
+    const statRevenue = document.getElementById("statRevenue");
+    const ordersBadge = document.getElementById("ordersBadge");
+    const todayDate = document.getElementById("todayDate");
+    const pageTitle = document.getElementById("pageTitle");
+
+    const productTableBody = document.querySelector("#productTable tbody");
+    const categoryTableBody = document.querySelector("#categoryTable tbody");
+    const stockTableBody = document.querySelector("#stockTable tbody");
+
+    // Helpers
+    function formatCurrency(val) {
+      return "₹" + val.toFixed(2);
+    }
+
+    // ---------- VIEW SWITCHING ----------
+    const views = document.querySelectorAll(".view");
+    const navLinks = document.querySelectorAll(".nav-link[data-view]");
+
+    navLinks.forEach(link => {
+      link.addEventListener("click", () => {
+        const target = link.dataset.view;
+
+        // active nav
+        navLinks.forEach(l => l.classList.remove("active"));
+        link.classList.add("active");
+
+        // active view
+        views.forEach(v => v.classList.remove("active"));
+        document.getElementById(target).classList.add("active");
+
+        // update title
+        if (target === "view-pos") pageTitle.textContent = "Billing & Inventory Console";
+        else if (target === "view-products") pageTitle.textContent = "Product Master";
+        else if (target === "view-categories") pageTitle.textContent = "Category Management";
+        else if (target === "view-stock") pageTitle.textContent = "Stock Alerts";
+      });
+    });
+
+    // ---------- POS: PRODUCTS ----------
+    function renderProducts() {
+      const search = searchInput.value.trim().toLowerCase();
+      const activeChip = document.querySelector(".chip.active");
+      const activeFilter = activeChip ? activeChip.dataset.filter : "all";
+
+      [...productListEl.querySelectorAll(".product-row:not(.header)")].forEach(r => r.remove());
+
+      let lowStockCount = 0;
+      let visibleCount = 0;
+
+      products.forEach(p => {
+        const matchSearch =
+          p.name.toLowerCase().includes(search) ||
+          p.id.toLowerCase().includes(search);
+        const matchFilter =
+          activeFilter === "all" || p.category === activeFilter;
+
+        if (!matchSearch || !matchFilter) return;
+
+        visibleCount++;
+        if (p.stock < 5) lowStockCount++;
+
+        const row = document.createElement("div");
+        row.className = "product-row";
+
+        const nameCell = document.createElement("div");
+        nameCell.className = "product-name";
+        nameCell.innerHTML = `
+          <strong>${p.name}</strong>
+          <span>${p.id} • ${p.unit}</span>
+        `;
+
+        const catCell = document.createElement("div");
+        catCell.innerHTML = `<span class="badge-cat">${p.category}</span>`;
+
+        const stockCell = document.createElement("div");
+        const low = p.stock < 5;
+        stockCell.innerHTML = `
+          <span class="pill-stock ${low ? "low" : ""}">
+            ${p.stock} in stock
+          </span>
+        `;
+
+        const priceCell = document.createElement("div");
+        priceCell.innerHTML = `<span class="price">${formatCurrency(p.price)}</span>`;
+
+        const actionCell = document.createElement("div");
+        const btn = document.createElement("button");
+        btn.className = "btn btn-primary btn-xs";
+        btn.innerHTML = "Add to Cart";
+        btn.onclick = () => addToCart(p.id);
+        actionCell.appendChild(btn);
+
+        row.append(nameCell, catCell, stockCell, priceCell, actionCell);
+        productListEl.appendChild(row);
+      });
+
+      productCountTag.textContent = `${visibleCount} SKUs visible`;
+      statLowStock.textContent = lowStockCount;
+
+      renderProductMasterTable();
+      renderCategoryTable();
+      renderStockAlertTable();
+    }
+
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product || product.stock <= 0) return;
+
+      const existing = cart.find(i => i.id === productId);
+      if (existing) {
+        if (existing.qty < product.stock) {
+          existing.qty += 1;
+        }
+      } else {
+        cart.push({ id: product.id, name: product.name, price: product.price, qty: 1 });
+      }
+      renderCart();
+    }
+
+    function updateCartQty(productId, delta) {
+      const item = cart.find(i => i.id === productId);
+      if (!item) return;
+
+      const product = products.find(p => p.id === productId);
+      const newQty = item.qty + delta;
+      if (newQty <= 0) {
+        cart = cart.filter(i => i.id !== productId);
+      } else if (product && newQty <= product.stock) {
+        item.qty = newQty;
+      }
+      renderCart();
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(i => i.id !== productId);
+      renderCart();
+    }
+
+    function renderCart() {
+      [...cartListEl.querySelectorAll(".cart-row:not(.header)")].forEach(r => r.remove());
+
+      let subtotal = 0;
+      let totalQty = 0;
+
+      cart.forEach(item => {
+        const lineTotal = item.qty * item.price;
+        subtotal += lineTotal;
+        totalQty += item.qty;
+
+        const row = document.createElement("div");
+        row.className = "cart-row";
+
+        const nameCell = document.createElement("div");
+        nameCell.innerHTML = `<strong>${item.name}</strong><br/><span style="font-size:10px;color:#9ca3af">${item.id}</span>`;
+
+        const qtyCell = document.createElement("div");
+        const ctl = document.createElement("div");
+        ctl.className = "qty-control";
+        const dec = document.createElement("button");
+        dec.textContent = "−";
+        dec.onclick = () => updateCartQty(item.id, -1);
+        const span = document.createElement("span");
+        span.textContent = item.qty;
+        const inc = document.createElement("button");
+        inc.textContent = "+";
+        inc.onclick = () => updateCartQty(item.id, +1);
+        ctl.append(dec, span, inc);
+        qtyCell.appendChild(ctl);
+
+        const priceCell = document.createElement("div");
+        priceCell.innerHTML = `<span class="price">${formatCurrency(item.price)}</span>`;
+
+        const lineCell = document.createElement("div");
+        lineCell.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;">
+            <span class="price">${formatCurrency(lineTotal)}</span>
+            <button class="btn btn-ghost btn-xs" title="Remove" onclick="removeItemFromCart('${item.id}')">✕</button>
+          </div>
+        `;
+
+        row.append(nameCell, qtyCell, priceCell, lineCell);
+        cartListEl.appendChild(row);
+      });
+
+      const tax = subtotal * 0.18;
+      const discount = Number(discountInput.value) || 0;
+      const net = Math.max(subtotal + tax - discount, 0);
+
+      subTotalEl.textContent = formatCurrency(subtotal);
+      taxAmountEl.textContent = formatCurrency(tax);
+      netTotalEl.textContent = formatCurrency(net);
+
+      statCartQty.textContent = totalQty;
+      statCartLines.textContent = cart.length;
+      metaItems.textContent = totalQty;
+    }
+
+    window.removeItemFromCart = removeFromCart;
+
+    function clearCart() {
+      cart = [];
+      discountInput.value = 0;
+      renderCart();
+    }
+
+    function nextBillNumber() {
+      billCounter += 1;
+      const pad = String(billCounter).padStart(4, "0");
+      billNumberEl.textContent = `POS‑${pad}`;
+    }
+
+    function checkout() {
+      const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      if (subtotal <= 0) return;
+
+      const tax = subtotal * 0.18;
+      const discount = Number(discountInput.value) || 0;
+      const net = Math.max(subtotal + tax - discount, 0);
+
+      cart.forEach(item => {
+        const p = products.find(pr => pr.id === item.id);
+        if (p) p.stock = Math.max(p.stock - item.qty, 0);
+      });
+
+      todayRevenue += net;
+      lastBill = net;
+      const todayBills = billCounter;
+      statRevenue.textContent = formatCurrency(todayRevenue);
+      lastBillValue.textContent = formatCurrency(lastBill);
+      ordersBadge.textContent = `Bills today: ${todayBills}`;
+
+      alert(`Bill completed.\nNet payable: ${formatCurrency(net)}\nItems: ${cart.length}`);
+
+      clearCart();
+      nextBillNumber();
+      renderProducts();
+    }
+
+    // ---------- OTHER VIEWS ----------
+    function renderProductMasterTable() {
+      productTableBody.innerHTML = "";
+      products.forEach(p => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${p.id}</td>
+          <td>${p.name}</td>
+          <td>${p.category}</td>
+          <td>${formatCurrency(p.price)}</td>
+          <td>${p.stock}</td>
+        `;
+        productTableBody.appendChild(tr);
+      });
+    }
+
+    function renderCategoryTable() {
+      const map = {};
+      products.forEach(p => {
+        if (!map[p.category]) map[p.category] = { count: 0, stock: 0 };
+        map[p.category].count += 1;
+        map[p.category].stock += p.stock;
+      });
+      categoryTableBody.innerHTML = "";
+      Object.keys(map).forEach(cat => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${cat}</td>
+          <td>${map[cat].count}</td>
+          <td>${map[cat].stock}</td>
+        `;
+        categoryTableBody.appendChild(tr);
+      });
+    }
+
+    function renderStockAlertTable() {
+      stockTableBody.innerHTML = "";
+      products
+        .filter(p => p.stock < 5)
+        .forEach(p => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${p.id}</td>
+            <td>${p.name}</td>
+            <td>${p.category}</td>
+            <td style="color:#fecaca">${p.stock}</td>
+          `;
+          stockTableBody.appendChild(tr);
+        });
+    }
+
+    // Events
+    searchInput.addEventListener("input", () => renderProducts());
+    filterChips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        filterChips.forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        renderProducts();
+      });
+    });
+    discountInput.addEventListener("input", () => renderCart());
+    btnClearCart.addEventListener("click", clearCart);
+    btnCheckout.addEventListener("click", checkout);
+
+    // Init
+    todayDate.textContent = new Date().toLocaleDateString();
+    productCountTag.textContent = `${products.length} SKUs`;
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
