@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Reservation System</title>
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9fafb;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+     
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hotel-name {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #4b5563;
+            margin: 0 15px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #667eea;
+        }
+        
+      
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        .hero h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        
+        .hero-btn {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        
+        section {
+            padding: 80px 20px;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 40px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1f2937;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #6b7280;
+            margin-bottom: 50px;
+        }
+        
+        
+        .booking-form {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 50px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        fieldset {
+            border: none;
+            margin-bottom: 40px;
+        }
+        
+        legend {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #1f2937;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input, select {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px 50px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s;
+            display: block;
+            margin: 30px auto 0;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .room-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .room-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+        
+        .room-header {
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+        }
+        
+        .room-header-1 { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+        .room-header-2 { background: linear-gradient(135deg, #34d399, #10b981); }
+        .room-header-3 { background: linear-gradient(135deg, #a78bfa, #8b5cf6); }
+        .room-header-4 { background: linear-gradient(135deg, #f472b6, #ec4899); }
+        
+        .room-body {
+            padding: 25px;
+        }
+        
+        .room-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+        
+        .room-price {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .room-price span {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: normal;
+        }
+        
+        .room-amenities {
+            list-style: none;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .room-amenities li {
+            margin-bottom: 8px;
+        }
+        
+        
+        .table-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        caption {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 20px;
+            color: #1f2937;
+        }
+        
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        th, td {
+            padding: 18px 25px;
+            text-align: left;
+        }
+        
+        th {
+            font-weight: 600;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #e5e7eb;
+            transition: background 0.2s;
+        }
+        
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+        
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+        
+        td:first-child {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        td:nth-child(2) {
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .contact-item {
+            text-align: center;
+        }
+        
+        .contact-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 35px;
+        }
+        
+        .contact-icon-1 { background: #dbeafe; }
+        .contact-icon-2 { background: #d1fae5; }
+        .contact-icon-3 { background: #e9d5ff; }
+        
+        .contact-item h3 {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+        
+        .contact-item p, .contact-item a {
+            color: #6b7280;
+        }
+        
+        .contact-item a {
+            text-decoration: none;
+        }
+        
+        .contact-item a:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+        
+        
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        footer p {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        footer .tagline {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+        
+        
+        .confirmation {
+            margin-top: 40px;
+            background: #d1fae5;
+            border-left: 5px solid #10b981;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        .confirmation-content {
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .confirmation-icon {
+            font-size: 40px;
+            margin-right: 20px;
+        }
+        
+        .confirmation h3 {
+            color: #065f46;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        
+        .confirmation p {
+            color: #047857;
+            line-height: 1.6;
+        }
+        
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav {
+                margin-top: 15px;
+            }
+            
+            nav a {
+                margin: 0 10px;
+                font-size: 14px;
+            }
+            
+            .hero h2 {
+                font-size: 32px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .booking-form {
+                padding: 30px 20px;
+            }
+            
+            .section-title {
+                font-size: 32px;
+            }
+            
+            .rooms-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 12px 15px;
+            }
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body><!-- Modern Header with Navigation -->
+  <header>
+   <div class="header-content">
+    <h1 class="hotel-name">🏨 Grand Luxury Hotel</h1>
+    <nav><a href="#home">Home</a> <a href="#rooms">Rooms</a> <a href="#book">Book Now</a> <a href="#contact">Contact</a>
+    </nav>
+   </div>
+  </header><!-- Hero Section with Gradient Background -->
+  <section id="home" class="hero">
+   <h2>Welcome to Your Perfect Stay</h2>
+   <p>Experience luxury and comfort with our online hotel booking system. Reserve your dream room today!</p><a href="#book" class="hero-btn">Book Your Stay Now</a>
+  </section><!-- Booking Form Section -->
+  <section id="book">
+   <h2 class="section-title">Book Your Stay</h2>
+   <p class="section-subtitle">Fill in your details and we'll get you confirmed right away</p>
+   <form class="booking-form"><!-- Guest Information -->
+    <fieldset><legend>Guest Information</legend>
+     <div class="form-grid">
+      <div class="form-group"><label for="full-name">Full Name</label> <input type="text" id="full-name" name="full-name" required placeholder=" Sougata Karan">
+      </div>
+      <div class="form-group"><label for="email">Email Address</label> <input type="email" id="email" name="email" required placeholder=" sougatakaran.com">
+      </div>
+      <div class="form-group"><label for="phone">Phone Number</label> <input type="tel" id="phone" name="phone" required placeholder="+91 96092819">
+      </div>
+     </div>
+    </fieldset><!-- Reservation Details -->
+    <fieldset><legend>Reservation Details</legend>
+     <div class="form-grid">
+      <div class="form-group"><label for="check-in">Check-in Date</label> <input type="date" id="check-in" name="check-in" required>
+      </div>
+      <div class="form-group"><label for="check-out">Check-out Date</label> <input type="date" id="check-out" name="check-out" required>
+      </div>
+      <div class="form-group"><label for="guests">Number of Guests</label> <input type="number" id="guests" name="guests" min="1" max="10" value="1" required>
+      </div>
+      <div class="form-group"><label for="room-type">Room Type</label> <select id="room-type" name="room-type" required> <option value="">-- Select Room Type --</option> <option value="single">Single Room</option> <option value="double">Double Room</option> <option value="deluxe">Deluxe Room</option> <option value="suite">Suite</option> </select>
+      </div>
+     </div>
+    </fieldset><!-- Submit Button --> <button type="submit" class="submit-btn">Reserve Now →</button>
+   </form>
+  </section><!-- Room Details Section with Modern Cards -->
+  <section id="rooms">
+   <h2 class="section-title">Our Rooms</h2>
+   <p class="section-subtitle">Explore our carefully designed rooms with world-class amenities</p><!-- Room Cards Grid -->
+   <div class="container">
+    <div class="rooms-grid"><!-- Single Room Card -->
+     <div class="room-card">
+      <div class="room-header room-header-1"><span>🛏️</span>
+      </div>
+      <div class="room-body">
+       <h3 class="room-title">Single</h3>
+       <p class="room-price">₹2,999<span>/night</span></p>
+       <ul class="room-amenities">
+        <li>✓ Free Wi-Fi</li>
+        <li>✓ TV &amp; Air Conditioning</li>
+        <li>✓ Mini Fridge</li>
+       </ul>
+      </div>
+     </div><!-- Double Room Card -->
+     <div class="room-card">
+      <div class="room-header room-header-2"><span>🛋️</span>
+      </div>
+      <div class="room-body">
+       <h3 class="room-title">Double</h3>
+       <p class="room-price">₹4,499<span>/night</span></p>
+       <ul class="room-amenities">
+        <li>✓ Free Wi-Fi &amp; TV</li>
+        <li>✓ Coffee Maker</li>
+        <li>✓ City View</li>
+       </ul>
+      </div>
+     </div><!-- Deluxe Room Card -->
+     <div class="room-card">
+      <div class="room-header room-header-3"><span>🏖️</span>
+      </div>
+      <div class="room-body">
+       <h3 class="room-title">Deluxe</h3>
+       <p class="room-price">₹6,999<span>/night</span></p>
+       <ul class="room-amenities">
+        <li>✓ Smart TV &amp; Mini Bar</li>
+        <li>✓ Ocean View</li>
+        <li>✓ Private Balcony</li>
+       </ul>
+      </div>
+     </div><!-- Suite Card -->
+     <div class="room-card">
+      <div class="room-header room-header-4"><span>👑</span>
+      </div>
+      <div class="room-body">
+       <h3 class="room-title">Suite</h3>
+       <p class="room-price">₹12,999<span>/night</span></p>
+       <ul class="room-amenities">
+        <li>✓ Panoramic View</li>
+        <li>✓ Jacuzzi &amp; Living Room</li>
+        <li>✓ Full Bar</li>
+       </ul>
+      </div>
+     </div>
+    </div><!-- Detailed Table -->
+    <div class="table-container">
+     <table>
+      <caption>
+       Complete Room Details
+      </caption>
+      <thead>
+       <tr>
+        <th>Room Type</th>
+        <th>Price per Night</th>
+        <th>Amenities</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr>
+        <td>Single</td>
+        <td>₹2,999</td>
+        <td>Free Wi-Fi, TV, Air Conditioning, Mini Fridge</td>
+       </tr>
+       <tr>
+        <td>Double</td>
+        <td>₹4,499</td>
+        <td>Free Wi-Fi, TV, Air Conditioning, Mini Fridge, Coffee Maker, City View</td>
+       </tr>
+       <tr>
+        <td>Deluxe</td>
+        <td>₹6,999</td>
+        <td>Free Wi-Fi, Smart TV, Air Conditioning, Mini Bar, Coffee Maker, Ocean View, Balcony</td>
+       </tr>
+       <tr>
+        <td>Suite</td>
+        <td>₹12,999</td>
+        <td>Free Wi-Fi, Smart TV, Air Conditioning, Full Bar, Espresso Machine, Panoramic View, Balcony, Jacuzzi, Separate Living Room</td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+  </section><!-- Contact Section -->
+  <section id="contact">
+   <h2 class="section-title">Contact Us</h2>
+   <p class="section-subtitle">We're here to help with any questions about your reservation</p>
+   <div class="contact-grid"><!-- Address -->
+    <div class="contact-item">
+     <div class="contact-icon contact-icon-1"><span>📍</span>
+     </div>
+     <h3>Address</h3>
+     <p>Raghunathpur,Jhargarm, PIN 721107</p>
+    </div><!-- Phone -->
+    <div class="contact-item">
+     <div class="contact-icon contact-icon-2"><span>📞</span>
+     </div>
+     <h3>Phone</h3>
+     <p>+91 6296092819</p>
+    </div><!-- Email -->
+    <div class="contact-item">
+     <div class="contact-icon contact-icon-3"><span>✉️</span>
+     </div>
+     <h3>Email</h3><a href="mailto: sougatakaran347.com">sougatakaran347.com</a>
+    </div>
+   </div>
+  </section><!-- Modern Footer -->
+  <footer>
+   <p>© 2024 Grand Luxury Hotel. All rights reserved.</p>
+   <p class="tagline">Luxury accommodation for the discerning traveler</p>
+  </footer>
+  <script>
+            // Handle form submission with modern confirmation
+            document.querySelector('form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const formData = new FormData(event.target);
+                const fullName = formData.get('full-name');
+                const roomType = formData.get('room-type');
+                const checkIn = formData.get('check-in');
+                const checkOut = formData.get('check-out');
+                
+                // Create a modern confirmation message
+                const confirmSection = document.createElement('div');
+                confirmSection.className = 'confirmation';
+                confirmSection.innerHTML = `
+                    <div class="confirmation-content">
+                        <div class="confirmation-icon">✅</div>
+                        <div>
+                            <h3>Reservation Confirmed!</h3>
+                            <p>Thank you, <strong>${fullName}</strong>! Your <strong>${roomType}</strong> room reservation from <strong>${checkIn}</strong> to <strong>${checkOut}</strong> has been received.</p>
+                            <p>We will send a confirmation email shortly.</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Insert confirmation after the form
+                event.target.parentNode.insertBefore(confirmSection, event.target.nextSibling);
+                
+               
+                event.target.reset();
+                
+               
+                confirmSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+               
+                setTimeout(function() {
+                    confirmSection.style.opacity = '0';
+                    confirmSection.style.transition = 'opacity 0.5s ease';
+                    setTimeout(function() {
+                        confirmSection.remove();
+                    }, 500);
+                }, 8000);
+            });
+        </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b41fc39a67093bb',t:'MTc2Njc2Njg2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
